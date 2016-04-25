@@ -1742,7 +1742,7 @@ class Connection
                 }
                 $item[(string)$fieldNode['name']] = (string)$fieldNode->value;
             }
-            $items[$item['updated'] ?: 0] = $item;
+            $items[$item['updated'] === 'null' ? 0 : $item['updated']] = $item;
         }
         ksort($items);
         return $items;
