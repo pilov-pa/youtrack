@@ -1719,4 +1719,32 @@ class Connection
         }
         return $items;
     }
+
+    /**
+     * Get issue history by issue id
+     *
+     * @link https://confluence.jetbrains.com/display/YTD6/Get+Issue+History
+     *
+     * @param $issueId
+     *
+     * @return array
+     */
+    public function getIssueHistory($issueId)
+    {
+        $items = array();
+        $req = $this->request('GET', '/issue/' . urlencode($issueId) . '/history');
+        $xml = simplexml_load_string($req['content']);
+        foreach ($xml->children() as $node) {
+            $item = array();
+            foreach($node as $fieldNode) {
+                if((string)$fieldNode['name'] === '') {
+                    continue;
+                }
+                $item[(string)$fieldNode['name']] = (string)$fieldNode->value;
+            }
+            $items[$item['updated'] ?: 0] = $item;
+        }
+        ksort($items);
+        return $items;
+    }
 }

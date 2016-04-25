@@ -11,6 +11,7 @@ class Issue extends Object
     private $links = array();
     private $attachments = array();
     private $comments = array();
+    private $history = array();
 
     public function __construct(\SimpleXMLElement $xml = null, Connection $youtrack = null)
     {
@@ -147,5 +148,16 @@ class Issue extends Object
     public function hasLinks()
     {
         return count($this->links) > 0;
+    }
+
+    /**
+     * @return array
+     */
+    public function getHistory()
+    {
+        if (empty($this->history)) {
+            $this->history = $this->youtrack->getIssueHistory($this->__get('id'));
+        }
+        return $this->history;
     }
 }
